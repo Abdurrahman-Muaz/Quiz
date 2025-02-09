@@ -12,7 +12,7 @@ export default function Page() {
   const [dogruIndex, dogruIndexGuncelle] = useState(null); // doğruIndex state'i ve dogruIndexGuncelle fonksiyonu
   const [yanlisIndex, yanlisIndexGuncelle] = useState(null); // yanlisIndex state'i ve yanlisIndexGuncelle fonksiyonu
 const [aktifSoruIndex, aktifSoruIndexGuncelle] = useState(0); // aktifSoruIndex state'i ve aktifSoruIndexGuncelle fonksiyonu
-
+const [soruDegisiyor, soruDegisiyorGuncelle] = useState(false); // soruDegisiyor state'i ve soruDegisiyorGuncelle fonksiyonu
 
   // Kullanıcının seçim yapmasını sağlayan fonksiyon
   function secimYap(indeks) {
@@ -29,6 +29,8 @@ const [aktifSoruIndex, aktifSoruIndexGuncelle] = useState(0); // aktifSoruIndex 
     dogruIndexGuncelle(veri[aktifSoruIndex].dogruCevapIndeks); // Doğru cevabın indeksini güncelle
     // 3 saniye sonra bir sonraki soruya geç
 
+    soruDegisiyorGuncelle(true);
+
     setTimeout(() => {
       // Eğer aktifSoruIndex son soruya ulaştıysa oyunu bitir
       if (aktifSoruIndex === veri.length - 1) {
@@ -40,6 +42,7 @@ const [aktifSoruIndex, aktifSoruIndexGuncelle] = useState(0); // aktifSoruIndex 
       aktifSoruIndexGuncelle(aktifSoruIndex + 1);
       dogruIndexGuncelle(null);
       yanlisIndexGuncelle(null);
+      soruDegisiyorGuncelle(false);
     },3000);
     
   }
@@ -65,7 +68,7 @@ const [aktifSoruIndex, aktifSoruIndexGuncelle] = useState(0); // aktifSoruIndex 
 
             {veri[aktifSoruIndex].secenekler.map((secenek,indeks)=> (
 
-                <SecenekButon key={indeks} secenek={secenek} indeks={indeks} secimYap={secimYap} dogruIndex={dogruIndex} yanlisIndex={yanlisIndex} />
+                <SecenekButon soruDegisiyor={soruDegisiyor} key={indeks} secenek={secenek} indeks={indeks} secimYap={secimYap} dogruIndex={dogruIndex} yanlisIndex={yanlisIndex} />
 
             ))}
 
