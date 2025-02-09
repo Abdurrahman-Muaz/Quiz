@@ -11,11 +11,13 @@ export default function Page() {
   const [can, canGuncelle] = useState(3); // can state'i ve canGuncelle fonksiyonu
   const [dogruIndex, dogruIndexGuncelle] = useState(null); // doğruIndex state'i ve dogruIndexGuncelle fonksiyonu
   const [yanlisIndex, yanlisIndexGuncelle] = useState(null); // yanlisIndex state'i ve yanlisIndexGuncelle fonksiyonu
+const [aktifSoruIndex, aktifSoruIndexGuncelle] = useState(0); // aktifSoruIndex state'i ve aktifSoruIndexGuncelle fonksiyonu
+
 
   // Kullanıcının seçim yapmasını sağlayan fonksiyon
   function secimYap(indeks) {
     // Kullanıcının seçtiği seçenek doğru cevap mı kontrol et
-    if (veri.dogruCevapIndeks === indeks) {
+    if (veri[aktifSoruIndex].dogruCevapIndeks === indeks) {
       // Doğru cevap ise
       puanGuncelle(puan + 5); // Doğru cevap ise puanı 5 arttır
     } else {
@@ -24,7 +26,22 @@ export default function Page() {
       canGuncelle(can - 1); // Yanlış cevap ise canı 1 azalt
     }
 
-    dogruIndexGuncelle(veri.dogruCevapIndeks); // Doğru cevabın indeksini güncelle
+    dogruIndexGuncelle(veri[aktifSoruIndex].dogruCevapIndeks); // Doğru cevabın indeksini güncelle
+    // 3 saniye sonra bir sonraki soruya geç
+
+    setTimeout(() => {
+      // Eğer aktifSoruIndex son soruya ulaştıysa oyunu bitir
+      if (aktifSoruIndex === veri.length - 1) {
+        alert("Oyun bitti! Toplam puan: " + puan);
+        return;
+      }
+
+      // Bir sonraki soruya geç
+      aktifSoruIndexGuncelle(aktifSoruIndex + 1);
+      dogruIndexGuncelle(null);
+      yanlisIndexGuncelle(null);
+    },3000);
+    
   }
 
   return (
@@ -39,12 +56,14 @@ export default function Page() {
       </div>
 
       <section className="flex flex-col items-center justify-center">
-        <p className="mb-8 text-4xl">{veri.soru}</p>
+        <p className="mb-8 text-4xl">{veri[aktifSoruIndex].soru}</p>
 
         <div className="flex flex-col items-center justify-center gap-4">
 
 
-            {veri.secenekler.map((secenek,indeks)=> (
+
+
+            {veri[aktifSoruIndex].secenekler.map((secenek,indeks)=> (
 
                 <SecenekButon key={indeks} secenek={secenek} indeks={indeks} secimYap={secimYap} dogruIndex={dogruIndex} yanlisIndex={yanlisIndex} />
 
